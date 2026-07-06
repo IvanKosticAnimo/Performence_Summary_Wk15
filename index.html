@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Summary Report – Week Ending 5 July 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #1a1a2e;
+  background: #fff;
+  line-height: 1.55;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 48px 56px 40px;
+}
+
+/* ── TITLE BLOCK ── */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.meta-line {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 28px;
+}
+
+/* ── SECTION HEADINGS ── */
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 34px 0 14px;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 20px 0 10px;
+}
+.sub-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 22px 0 10px;
+}
+
+/* ── BODY TEXT ── */
+p {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.65;
+}
+p strong { color: #1a1a2e; font-weight: 700; }
+.small-note { font-size: 11px; color: #777; margin-bottom: 10px; }
+
+/* ── TABLES ── */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  font-size: 13px;
+}
+thead th {
+  background: #f5f5f5;
+  color: #1a1a2e;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #eee;
+}
+thead th:last-child { border-right: none; }
+tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #f3f3f3;
+  color: #333;
+  background: #fff;
+}
+tbody td:last-child { border-right: none; }
+tbody tr:nth-child(odd) td { background: #fafafa; }
+tbody tr:last-child td { border-bottom: none; }
+tbody td:first-child { color: #333; }
+
+.tr { text-align: right; }
+.tc { text-align: center; }
+.pos { color: #2d6a4f; font-weight: 600; }
+.neg { color: #c1121f; font-weight: 600; }
+.pos-bold { color: #2d6a4f; font-weight: 700; }
+.neg-bold { color: #c1121f; font-weight: 700; }
+.port { color: #800020; font-weight: 600; }
+.city { color: #2563eb; font-weight: 600; }
+.row-total td {
+  font-weight: 700;
+  background: #f5f5f5 !important;
+  color: #1a1a2e;
+}
+
+/* ── CHART CONTAINERS ── */
+.chart-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 22px 22px 14px;
+  margin-bottom: 22px;
+  background: #fff;
+}
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.chart-legend {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #333;
+}
+.legend-outline {
+  display: inline-block;
+  width: 26px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.legend-solid {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* ── INCIDENT DISTRIBUTION ── */
+.inc-dist {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.inc-row {
+  display: grid;
+  grid-template-columns: 300px repeat(4, 1fr) 110px;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+.inc-row:last-child { border-bottom: none; }
+.inc-row:nth-child(odd) { background: #fafafa; }
+.inc-label {
+  padding: 12px 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.4;
+}
+.inc-label span { font-weight: 400; color: #777; font-size: 12px; }
+.inc-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+.badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+.b-p1 { background: #c1121f; }
+.b-p2 { background: #ea580c; }
+.b-p3 { background: #d97706; }
+.b-p4 { background: #949494; }
+.inc-total {
+  text-align: center;
+  font-weight: 700;
+  color: #1a1a2e;
+  font-size: 13px;
+  padding: 8px;
+}
+.inc-legend {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 22px;
+  font-weight: 600;
+}
+.inc-legend .dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* ── FOOTER ── */
+.footer {
+  font-size: 11px;
+  color: #999;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-top: 44px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══════════ TITLE ══════════ -->
+<h1>Performance Summary Report</h1>
+<div class="meta-line">Week Ending 5 July 2026 &nbsp;|&nbsp; Reporting Period: 29 June - 5 July 2026 &nbsp;|&nbsp; Week 15 of Reporting</div>
+
+<!-- ══════════ SUMMARY METRICS ══════════ -->
+<h2 style="margin-top:0;">Summary Metrics</h2>
+<table>
+  <thead>
+    <tr><th>Metric</th><th class="tr">Value</th><th class="tr">VS Week 14</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Gross Gaming Revenue</td><td class="tr"><strong>$25,571</strong></td><td class="tr neg">-26.6%</td></tr>
+    <tr><td>Total Wagered</td><td class="tr"><strong>$683K</strong></td><td class="tr pos">+51.1%</td></tr>
+    <tr><td>GGR Margin</td><td class="tr"><strong>3.74%</strong></td><td class="tr neg">-3.97pp</td></tr>
+    <tr><td>Total Rounds Played</td><td class="tr"><strong>27,218</strong></td><td class="tr pos">+16.4%</td></tr>
+    <tr><td>Active Player-Hours</td><td class="tr"><strong>515</strong></td><td class="tr pos">+18.1%</td></tr>
+    <tr><td>Conversion Rate</td><td class="tr"><strong>70.5%</strong></td><td class="tr pos">+0.4pp</td></tr>
+    <tr><td>Avg Session Length</td><td class="tr"><strong>8.6 mins</strong></td><td class="tr neg">-12.9%</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════ 1. EXECUTIVE COMMENTARY ══════════ -->
+<h2>1. Executive Commentary</h2>
+
+<p>The week ending 5 July 2026 delivered <strong>$25,571 GGR</strong> on <strong>$683K wagered</strong> at a portfolio margin of <strong>3.74%</strong>. GGR fell 26.6% versus Week 14's $34,857, however it is important to understand why: wagered volume actually rose 51.1% - meaning significantly more money moved through the tables this week. The lower GGR result comes entirely from margin compression (7.71% down to 3.74%), not from reduced player activity. In plain terms, players played more, but the house kept a smaller share of what was bet - a normal outcome of statistical variance at this volume level. Cumulative GGR across the 15 weeks of reporting now stands at <strong>$901,359 on $25.76M wagered at 3.50% portfolio margin</strong>.</p>
+
+<p>The defining feature of this week is that <strong>all seven days finished in profit</strong> - the first week in the entire reporting period without a single loss-making day. Saturday 4 July was the strongest day at $8,173 GGR, driven by <span class="city">City Roulette</span>'s best single-day result of the reporting period (+$5,302). Monday 29 June was the softest day at $813 GGR, reflecting low early-week wagering volume ($59K).</p>
+
+<p>Stake.us ($17,675 GGR at 5.09% margin) and Stake.com ($7,741 at 4.98%) together produced effectively all of the week's revenue. HUB B2B (EU) finished modestly positive at $3,115 net - a strong contribution from Gamdom ($4,126, its best week in the reporting period) absorbed losses from Betpanda (-$622) and Cryptorino (-$2,286). Wednesday 1 July produced the week's most pronounced swings, with <span class="port">Port Roulette</span> recording both the best single hour (+$4,407 at 9pm UTC) and the worst (-$3,954 at 4am UTC) within the same calendar day.</p>
+
+<!-- ══════════ 2. ALERTS AND WATCH ITEMS ══════════ -->
+<h2>2. Alerts and Watch Items</h2>
+
+<p><strong>Margin compression despite the highest wagered volume in four weeks.</strong> $683K was wagered this week - the most since Week 11 - but the portfolio margin fell 3.97 percentage points from Week 14. No single catastrophic loss event occurred; instead, multiple smaller unfavourable outcomes accumulated across the week. This is variance-driven rather than structural, and the cumulative 15-week margin remains steady at 3.50%.</p>
+
+<p><strong>City Roulette wheel failed to register spin results on 1 July (Incident ID 690, Major).</strong> The wheel repeatedly produced "did not register" (DNR) events in a short window - meaning spin results were not captured and rounds could not settle normally, requiring manual intervention. The administrative resolution window ran approximately 4.8 hours. This is a hardware or sensor reliability concern and is the most operationally significant incident of the week. See Section 11 for detail and Section 12 for the recommended follow-up.</p>
+
+<p><strong>Cryptorino and Betpanda both finished negative.</strong> Two of HUB B2B (EU)'s largest sub-partners by volume went backwards this week: Cryptorino posted -$2,286 on $34,736 wagered and Betpanda posted -$622 on $42,506 wagered. Between them they processed $77K in wagers at a combined loss of $2,908, significantly suppressing the HUB B2B (EU) total. Worth confirming with the commercial team whether this is normal variance at their wagering scale or an emerging pattern.</p>
+
+<p><strong>14 platform incidents logged during the period.</strong> See Section 11 for full incident log analysis. No Critical (P1) incidents occurred this week - an improvement on Week 14. The heaviest single day was Friday 3 July with five incidents, several of which appear connected.</p>
+
+<!-- ══════════ 3. WEEK-ON-WEEK IMPROVEMENTS ══════════ -->
+<h2>3. Week-on-Week Improvements</h2>
+
+<p><strong>All seven days profitable</strong> - the first clean sweep in the 15-week reporting period. Week 14 had one loss day (Sunday 28 June, -$2,455); this week had none. The cleanest weekly result on record.</p>
+
+<p><strong>Wagering volume up 51.1%</strong> from $452K to $683K - the highest single-week total since Week 11. Rounds played rose 16.4% (23,390 to 27,218), confirming genuinely higher activity rather than just larger individual bets. Both games contributed: Port wagered volume grew 41.7% and City nearly doubled at +99.0%.</p>
+
+<p><strong>City Roulette recorded its strongest single day of the reporting period</strong> on Saturday 4 July (+$5,302 at 7.27% margin), and contributed 41.9% of total weekly GGR - its highest share on record - despite a much smaller wagered base than Port.</p>
+
+<p><strong>No Critical (P1) incidents.</strong> Week 14 included a P1 power blip that dropped <span class="port">Port Roulette</span>'s stream entirely. This week's most severe classification was P2 Major. A positive platform stability signal at the top severity level.</p>
+
+<p><strong>Conversion rate reached 70.5% (+0.4pp vs Week 14)</strong>, a new high for the reporting period - meaning 70.5% of players who connected to a table placed at least one bet.</p>
+
+<!-- ══════════ 4. PERFORMANCE BY GAME ══════════ -->
+<h2>4. Performance by Game</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th class="tr">Port Roulette</th>
+      <th class="tr">VS W14</th>
+      <th class="tr">City Roulette</th>
+      <th class="tr">VS W14</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>GGR</td><td class="tr">$14,863</td><td class="tr neg">-45.1%</td><td class="tr">$10,708</td><td class="tr pos">+37.8%</td></tr>
+    <tr><td>GGR Share</td><td class="tr">58.1%</td><td class="tr">-</td><td class="tr">41.9%</td><td class="tr">-</td></tr>
+    <tr><td>Total Wagered</td><td class="tr">$536K</td><td class="tr pos">+41.7%</td><td class="tr">$147K</td><td class="tr pos">+99.0%</td></tr>
+    <tr><td>Margin</td><td class="tr">2.77%</td><td class="tr neg">-4.40pp</td><td class="tr">7.27%</td><td class="tr neg">-3.19pp</td></tr>
+    <tr><td>RTP</td><td class="tr">97.23%</td><td class="tr">-</td><td class="tr">92.73%</td><td class="tr">-</td></tr>
+    <tr><td>Rounds</td><td class="tr">17,387</td><td class="tr pos">+6.7%</td><td class="tr">9,831</td><td class="tr pos">+38.4%</td></tr>
+    <tr><td>Player-Hours</td><td class="tr">298</td><td class="tr">-</td><td class="tr">217</td><td class="tr">-</td></tr>
+    <tr><td>Avg Session</td><td class="tr">9.3 mins</td><td class="tr">-</td><td class="tr">7.7 mins</td><td class="tr">-</td></tr>
+    <tr><td>Conversion</td><td class="tr">80.0%</td><td class="tr">-</td><td class="tr">59.5%</td><td class="tr">-</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════ 5. DAY-OF-WEEK GGR ══════════ -->
+<h2>5. Day-of-Week GGR Performance</h2>
+
+<div class="chart-box">
+  <div class="chart-title">Daily GGR - Week 15 (29 June - 5 July 2026)</div>
+  <canvas id="dailyGGRChart" height="88"></canvas>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Day</th><th class="tr">GGR</th><th class="tr">Rounds</th><th class="tr">Wagered</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Mon 29 Jun</td><td class="tr pos-bold">+$813</td><td class="tr">3,040</td><td class="tr">$59,416</td></tr>
+    <tr><td>Tue 30 Jun</td><td class="tr pos">+$3,081</td><td class="tr">4,339</td><td class="tr">$102,394</td></tr>
+    <tr><td>Wed 1 Jul</td><td class="tr pos">+$3,608</td><td class="tr">4,619</td><td class="tr">$194,042</td></tr>
+    <tr><td>Thu 2 Jul</td><td class="tr pos">+$2,449</td><td class="tr">4,117</td><td class="tr">$78,714</td></tr>
+    <tr><td>Fri 3 Jul</td><td class="tr pos">+$4,676</td><td class="tr">3,451</td><td class="tr">$112,876</td></tr>
+    <tr><td>Sat 4 Jul</td><td class="tr pos-bold">+$8,173</td><td class="tr">3,786</td><td class="tr">$75,164</td></tr>
+    <tr><td>Sun 5 Jul</td><td class="tr pos">+$2,770</td><td class="tr">3,866</td><td class="tr">$60,311</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════ 6. HOURLY ACTIVITY ══════════ -->
+<h2>6. Hourly Activity Pattern</h2>
+
+<div class="chart-box">
+  <div class="chart-title">Hourly Wagering Pattern - Avg per Day ($)</div>
+  <div class="chart-legend">
+    <span><span class="legend-outline" style="border:2px solid #800020; background:rgba(128,0,32,0.06);"></span>Port Roulette</span>
+    <span><span class="legend-outline" style="border:2px solid #6495ED; background:rgba(100,149,237,0.08);"></span>City Roulette</span>
+  </div>
+  <canvas id="hourlyChart" height="80"></canvas>
+</div>
+
+<!-- ══════════ 7. GGR BY GAME BY DAY ══════════ -->
+<h2>7. GGR by Game by Day</h2>
+
+<div class="chart-box">
+  <div class="chart-title">GGR by Game by Day ($)</div>
+  <div class="chart-legend">
+    <span><span class="legend-solid" style="background:#2563eb;"></span>City Roulette</span>
+    <span><span class="legend-solid" style="background:#800020;"></span>Port Roulette</span>
+  </div>
+  <canvas id="gameByDayChart" height="88"></canvas>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Date</th><th class="tr">City Roulette</th><th class="tr">Port Roulette</th><th class="tr">Daily Total</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Mon 29 Jun</td><td class="tr pos">+$85</td><td class="tr pos">+$728</td><td class="tr pos">+$813</td></tr>
+    <tr><td>Tue 30 Jun</td><td class="tr pos">+$1,323</td><td class="tr pos">+$1,759</td><td class="tr pos">+$3,081</td></tr>
+    <tr><td>Wed 1 Jul</td><td class="tr pos">+$556</td><td class="tr pos">+$3,053</td><td class="tr pos">+$3,608</td></tr>
+    <tr><td>Thu 2 Jul</td><td class="tr pos">+$3,129</td><td class="tr neg">$-680</td><td class="tr pos">+$2,449</td></tr>
+    <tr><td>Fri 3 Jul</td><td class="tr neg">$-1,429</td><td class="tr pos">+$6,106</td><td class="tr pos">+$4,676</td></tr>
+    <tr><td>Sat 4 Jul</td><td class="tr pos">+$5,302</td><td class="tr pos">+$2,871</td><td class="tr pos">+$8,173</td></tr>
+    <tr><td>Sun 5 Jul</td><td class="tr pos">+$1,744</td><td class="tr pos">+$1,026</td><td class="tr pos">+$2,770</td></tr>
+    <tr class="row-total"><td>Week Total</td><td class="tr">$10,708</td><td class="tr">$14,863</td><td class="tr">$25,571</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════ 8. NOTABLE HIGH-VALUE EVENTS ══════════ -->
+<h2>8. Notable High-Value Events</h2>
+
+<p>This week's events were modest in scale relative to the multi-hundred-thousand-dollar single-hour events seen in Weeks 7-10. The most notable pattern was a same-day loss-then-gain swing on <span class="port">Port Roulette</span> on Wednesday 1 July, and the week's peak hour also landing that evening.</p>
+
+<h3>Wednesday 1 July 4am and 9pm UTC - Same-Day Loss-Gain Swing</h3>
+<table>
+  <thead>
+    <tr><th>Hour (UTC)</th><th>Game</th><th class="tr">Wagered</th><th class="tr">Won by Players</th><th class="tr">GGR</th><th class="tr">Players</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Wed 4am</td><td class="port">Port Roulette</td><td class="tr">$8,349</td><td class="tr">$12,303</td><td class="tr neg-bold">$-3,954</td><td class="tr">16</td></tr>
+    <tr><td>Wed 9pm</td><td class="port">Port Roulette</td><td class="tr">$31,603</td><td class="tr">$27,196</td><td class="tr pos-bold">+$4,407</td><td class="tr">10</td></tr>
+    <tr class="row-total"><td colspan="2">Both hours combined</td><td class="tr">$39,952</td><td class="tr">$39,499</td><td class="tr pos-bold">+$453</td><td class="tr">-</td></tr>
+  </tbody>
+</table>
+
+<p>Unlike Week 14's Saturday reversal, these two hours involved different player counts (16 at 4am, 10 at 9pm) and very different wagering volumes, suggesting different cohorts. The net outcome across both hours was modestly positive (+$453), consistent with expected variance at this scale.</p>
+
+<h3>Wednesday 1 July 9pm UTC - Strongest Single Hour</h3>
+<p><span class="port">Port Roulette</span> wagered $31,603 across 10 players for +$4,407 GGR (13.9% margin) - the strongest single-hour outcome of the week and the main driver of Wednesday's $3,608 result. The second strongest hour was Friday 3 July 10pm UTC (<span class="port">Port Roulette</span>, +$3,985 on $13,837 wagered, 12 players).</p>
+
+<!-- ══════════ 9. PLAYER ENGAGEMENT ══════════ -->
+<h2>9. Player Engagement Metrics</h2>
+
+<table>
+  <thead>
+    <tr><th>Game</th><th class="tr">Conversion Rate</th><th class="tr">Bounce Rate</th><th class="tr">Avg Session</th><th class="tr">Player-Hours</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="port">Port Roulette</td><td class="tr">80.0%</td><td class="tr">20.0%</td><td class="tr">9.3 mins</td><td class="tr">298</td></tr>
+    <tr><td class="city">City Roulette</td><td class="tr">59.5%</td><td class="tr">40.5%</td><td class="tr">7.7 mins</td><td class="tr">217</td></tr>
+    <tr class="row-total"><td>Portfolio Average</td><td class="tr">70.5%</td><td class="tr">29.5%</td><td class="tr">8.6 mins</td><td class="tr">515</td></tr>
+  </tbody>
+</table>
+
+<p><span class="port">Port Roulette</span>'s 80.0% conversion is strong - four in five players who joined placed at least one bet. <span class="city">City Roulette</span>'s 59.5% is notably lower, meaning 40.5% of players who connect to City leave without betting. This 20.5pp gap between the two tables is the widest of the reporting period and has been raised as a recommended action.</p>
+
+<div class="sub-label">Player Behaviour Insights - Microsoft Clarity (June 2026)</div>
+
+<p>Session recordings, heatmaps and frustration-signal data from Microsoft Clarity across June provide direct evidence of how players actually interact with both games - and help explain some of the engagement numbers above.</p>
+
+<p><strong>1. Who is playing - device and country breakdown.</strong> Mobile is the dominant platform for both games. On <span class="city">City Roulette</span>, mobile browsers account for roughly 70% of sessions (Chrome Mobile 62.1% at 2,255 sessions, Mobile Safari 7.4% at 269), with desktop Chrome at 19.9% (721 sessions). On <span class="port">Port Roulette</span>, mobile makes up around 53% (Chrome Mobile 40.9% at 2,324 sessions, Mobile Safari 12.2% at 690), with a larger desktop share (Chrome 27.4% at 1,558 sessions). By country, India leads both games - 60.2% of <span class="city">City Roulette</span> sessions (2,184) and 36.0% of <span class="port">Port Roulette</span> sessions (2,043) - followed by the United States (5.4% City / 13.9% Port), the United Kingdom, and Canada. The practical implication: the majority of our players experience both games on a mobile screen, so mobile experience quality directly drives portfolio revenue.</p>
+
+<p><strong>2. Dead clicks - including on the decommissioned Sky Roulette.</strong> Both games show repeated dead and rage clicks on elements that look clickable but do not respond, concentrated in the stats, game history, autoplay and mobile chip selection areas - and in some recorded sessions, players exited immediately after a failed interaction. The most striking example came from a recorded Animo Lobby session (29 June, India, mobile): the player repeatedly tried to click into <strong>Sky Roulette</strong> - a game that is no longer live - with rapid taps on its "Play" option producing only dead clicks, before a play action finally registered elsewhere several minutes later. Players being able to see and attempt to open a decommissioned game is both a frustration source and a lobby content issue that should be corrected.</p>
+
+<p><strong>3. "Insufficient funds" blocking play.</strong> On <span class="port">Port Roulette</span>, recordings captured players hitting repeated "INSUFFICIENT FUNDS" messages that blocked play outright - an avoidable barrier at the exact moment a player is trying to bet. Clearer balance visibility and an easier deposit path would convert these blocked attempts into wagers rather than exits.</p>
+
+<p>Please refer to the attached Player Behaviour &amp; Game Insights report for the full analysis, including device heatmaps, session recordings and the complete roadmap recommendations.</p>
+
+<div class="sub-label">Top Operators</div>
+<table>
+  <thead>
+    <tr><th>#</th><th>Operator</th><th class="tr">GGR</th><th class="tr">GGR Share</th><th class="tr">Wagered</th><th class="tr">Margin</th><th class="tr">Rounds</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Stake.us</td><td class="tr">$17,675</td><td class="tr">69.1%</td><td class="tr">$347,227</td><td class="tr">5.09%</td><td class="tr">14,806</td></tr>
+    <tr><td>2</td><td>Stake.com</td><td class="tr">$7,741</td><td class="tr">30.3%</td><td class="tr">$155,538</td><td class="tr">4.98%</td><td class="tr">4,583</td></tr>
+    <tr><td>3</td><td>HUB B2B (EU)</td><td class="tr">$3,115</td><td class="tr">12.2%</td><td class="tr">$135,145</td><td class="tr">2.30%</td><td class="tr">3,139</td></tr>
+    <tr><td>4</td><td>SPACEHILLS</td><td class="tr">$270</td><td class="tr">1.1%</td><td class="tr">$2,518</td><td class="tr">10.74%</td><td class="tr">133</td></tr>
+    <tr><td>5</td><td>INSTANTCASINO</td><td class="tr">$141</td><td class="tr">0.6%</td><td class="tr">$411</td><td class="tr">34.34%</td><td class="tr">38</td></tr>
+    <tr><td>6</td><td>GOLDENPANDA</td><td class="tr">$112</td><td class="tr">0.4%</td><td class="tr">$1,066</td><td class="tr">10.48%</td><td class="tr">26</td></tr>
+    <tr><td>7</td><td>HUB B2B (AS)</td><td class="tr">$46</td><td class="tr">0.2%</td><td class="tr">$10,303</td><td class="tr">0.45%</td><td class="tr">2,082</td></tr>
+    <tr><td>8</td><td>FOXYGOLD</td><td class="tr">$21</td><td class="tr">0.1%</td><td class="tr">$2,525</td><td class="tr">0.83%</td><td class="tr">-</td></tr>
+    <tr><td>9</td><td>tesorcasino</td><td class="tr neg">$-1,164</td><td class="tr">-</td><td class="tr">$14,408</td><td class="tr neg">-8.08%</td><td class="tr">246</td></tr>
+    <tr><td>10</td><td>rollbit</td><td class="tr neg">$-2,024</td><td class="tr">-</td><td class="tr">$53,036</td><td class="tr neg">-3.82%</td><td class="tr">680</td></tr>
+  </tbody>
+</table>
+
+<div class="sub-label">Top Sub-Partners</div>
+<table>
+  <thead>
+    <tr><th>#</th><th>Sub-Partner</th><th>Operator Hub</th><th class="tr">GGR</th><th class="tr">Share</th><th class="tr">Wagered</th><th class="tr">Rounds</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Stake.us</td><td>Stake.us</td><td class="tr">$17,675</td><td class="tr">69.1%</td><td class="tr">$347,227</td><td class="tr">14,806</td></tr>
+    <tr><td>2</td><td>Stake.com</td><td>Stake.com</td><td class="tr">$7,741</td><td class="tr">30.3%</td><td class="tr">$155,538</td><td class="tr">4,583</td></tr>
+    <tr><td>3</td><td>Gamdom</td><td>HUB B2B (EU)</td><td class="tr">$4,126</td><td class="tr">16.1%</td><td class="tr">$16,369</td><td class="tr">796</td></tr>
+    <tr><td>4</td><td>yeet</td><td>HUB B2B (EU)</td><td class="tr">$1,214</td><td class="tr">4.7%</td><td class="tr">$6,719</td><td class="tr">64</td></tr>
+    <tr><td>5</td><td>Betbolt</td><td>HUB B2B (EU)</td><td class="tr">$1,014</td><td class="tr">4.0%</td><td class="tr">$5,864</td><td class="tr">183</td></tr>
+    <tr><td>6</td><td>BOABET</td><td>HUB B2B (AS)</td><td class="tr">$362</td><td class="tr">1.4%</td><td class="tr">$1,812</td><td class="tr">7</td></tr>
+    <tr><td>7</td><td>cyclone</td><td>HUB B2B (AS)</td><td class="tr">$307</td><td class="tr">1.2%</td><td class="tr">$4,028</td><td class="tr">837</td></tr>
+    <tr><td>8</td><td>Betpanda</td><td>HUB B2B (EU)</td><td class="tr neg">$-622</td><td class="tr">-</td><td class="tr">$42,506</td><td class="tr">976</td></tr>
+    <tr><td>9</td><td>Cryptorino</td><td>HUB B2B (EU)</td><td class="tr neg">$-2,286</td><td class="tr">-</td><td class="tr">$34,736</td><td class="tr">540</td></tr>
+  </tbody>
+</table>
+
+<p>Gamdom was HUB B2B (EU)'s clear standout this week at $4,126 GGR - its strongest weekly contribution in the reporting period - largely absorbing the combined losses from Cryptorino and Betpanda. Notably, Betpanda and Razed - the two sub-partners flagged for their surge in Week 14 - fell away sharply: Betpanda went from +$10,270 to -$622, and Razed from +$7,850 to -$25. This confirms the Week 14 assessment that their contributions reflect episodic high-value activity rather than a steady baseline. Stake.us accounted for 50.8% of all wagered volume this week, confirming its position as the portfolio's dominant volume driver.</p>
+
+<!-- ══════════ 10. 15-WEEK ROLLING SUMMARY ══════════ -->
+<h2>10. 15-Week Rolling Summary</h2>
+
+<p>The full reporting history including the integrated metrics for Week 15 is listed below.</p>
+
+<div class="chart-box">
+  <div class="chart-title">Weekly GGR Trend - W1 to W15</div>
+  <canvas id="rollingChart" height="78"></canvas>
+</div>
+
+<p class="small-note">Cumulative figures reflect all 15 reporting weeks (Weeks 1-15).</p>
+
+<div class="sub-label">Historical Performance Summary (Weeks 1 - 7)</div>
+<table>
+  <thead>
+    <tr><th>Metric</th><th class="tr">W1</th><th class="tr">W2</th><th class="tr">W3</th><th class="tr">W4</th><th class="tr">W5</th><th class="tr">W6</th><th class="tr">W7</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Gross Revenue (GGR)</td><td class="tr">$84.8K</td><td class="tr">$73.5K</td><td class="tr">$79.2K</td><td class="tr">$109.4K</td><td class="tr">$84.7K</td><td class="tr">$73.4K</td><td class="tr">$86.2K</td></tr>
+    <tr><td>Total Amount Wagered</td><td class="tr">$3.69M</td><td class="tr">$1.83M</td><td class="tr">$2.76M</td><td class="tr">$1.74M</td><td class="tr">$1.55M</td><td class="tr">$1.57M</td><td class="tr">$2.26M</td></tr>
+    <tr><td>House Profit Margin</td><td class="tr">2.30%</td><td class="tr">4.01%</td><td class="tr">2.87%</td><td class="tr">6.29%</td><td class="tr">5.46%</td><td class="tr">4.67%</td><td class="tr">3.81%</td></tr>
+    <tr><td>Total Rounds Played</td><td class="tr">21,316</td><td class="tr">25,682</td><td class="tr">24,484</td><td class="tr">43,875</td><td class="tr">41,783</td><td class="tr">38,370</td><td class="tr">35,128</td></tr>
+    <tr><td>Player Conversion Rate</td><td class="tr">51.8%</td><td class="tr">53.1%</td><td class="tr">55.3%</td><td class="tr">59.9%</td><td class="tr">57.1%</td><td class="tr">61.1%</td><td class="tr">63.6%</td></tr>
+  </tbody>
+</table>
+
+<div class="sub-label">Current Performance Summary (Weeks 8 - 15 + Cumulative)</div>
+<table>
+  <thead>
+    <tr><th>Metric</th><th class="tr">W8</th><th class="tr">W9</th><th class="tr">W10</th><th class="tr">W11</th><th class="tr">W12</th><th class="tr">W13</th><th class="tr">W14</th><th class="tr">W15</th><th class="tr">Cumulative</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Gross Revenue (GGR)</td><td class="tr">$11.8K</td><td class="tr">$22.4K</td><td class="tr">$185.9K</td><td class="tr">$25.5K</td><td class="tr">$7.0K</td><td class="tr neg">-$2.9K</td><td class="tr">$34.9K</td><td class="tr"><strong>$25.6K</strong></td><td class="tr">$901,359</td></tr>
+    <tr><td>Total Amount Wagered</td><td class="tr">$2.14M</td><td class="tr">$2.92M</td><td class="tr">$2.17M</td><td class="tr">$0.64M</td><td class="tr">$0.84M</td><td class="tr">$0.49M</td><td class="tr">$0.45M</td><td class="tr"><strong>$0.68M</strong></td><td class="tr">$25.76M</td></tr>
+    <tr><td>House Profit Margin</td><td class="tr">0.55%</td><td class="tr">0.77%</td><td class="tr">8.58%</td><td class="tr">3.98%</td><td class="tr">0.84%</td><td class="tr neg">-0.58%</td><td class="tr">7.71%</td><td class="tr"><strong>3.74%</strong></td><td class="tr">3.50%</td></tr>
+    <tr><td>Total Rounds Played</td><td class="tr">31,793</td><td class="tr">26,326</td><td class="tr">24,971</td><td class="tr">24,345</td><td class="tr">32,110</td><td class="tr">21,359</td><td class="tr">23,390</td><td class="tr"><strong>27,218</strong></td><td class="tr">442,150</td></tr>
+    <tr><td>Player Conversion Rate</td><td class="tr">66.5%</td><td class="tr">65.0%</td><td class="tr">63.3%</td><td class="tr">65.3%</td><td class="tr">69.3%</td><td class="tr">65.3%</td><td class="tr">70.1%</td><td class="tr"><strong>70.5%</strong></td><td class="tr">61.0%</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════ 11. INCIDENT LOG ══════════ -->
+<h2>11. Incident Log Analysis Summary</h2>
+
+<p>Platform service availability data is aggregated below according to definitions and severities. Log management notes indicate that extended administrative ticket open times for minor/informational entries reflect standard operational processing workflows rather than any true technical live streaming breakdown duration.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Downtime Category Layer</th>
+      <th class="tc">P1<br>(Critical)</th>
+      <th class="tc">P2<br>(Major)</th>
+      <th class="tc">P3<br>(Minor)</th>
+      <th class="tc">P4<br>(Info)</th>
+      <th class="tc">Total Incidents</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Broadcast / Screen Downtime</strong> (Visual stream unavailable)</td><td class="tc">0</td><td class="tc">2</td><td class="tc">6</td><td class="tc">1</td><td class="tc"><strong>9</strong></td></tr>
+    <tr><td><strong>Gameplay Downtime</strong> (Betting interface unavailable)</td><td class="tc">0</td><td class="tc">1</td><td class="tc">1</td><td class="tc">1</td><td class="tc"><strong>3</strong></td></tr>
+    <tr><td><strong>RGS Downtime</strong> (Backend transaction server unavailable)</td><td class="tc">0</td><td class="tc">1</td><td class="tc">0</td><td class="tc">1</td><td class="tc"><strong>2</strong></td></tr>
+    <tr class="row-total"><td>Total Layer Incidents</td><td class="tc">0</td><td class="tc">4</td><td class="tc">7</td><td class="tc">3</td><td class="tc"><strong>14</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="sub-label">Incident Distribution by Downtime Category &amp; Severity</div>
+
+<div class="inc-dist">
+  <div class="inc-row">
+    <div class="inc-label">Broadcast / Screen Downtime<br><span>(Visual stream)</span></div>
+    <div class="inc-badges"></div>
+    <div class="inc-badges"><div class="badge b-p2">2</div></div>
+    <div class="inc-badges"><div class="badge b-p3">6</div></div>
+    <div class="inc-badges"><div class="badge b-p4">1</div></div>
+    <div class="inc-total">Total: 9</div>
+  </div>
+  <div class="inc-row">
+    <div class="inc-label">Gameplay Downtime<br><span>(Betting interface)</span></div>
+    <div class="inc-badges"></div>
+    <div class="inc-badges"><div class="badge b-p2">1</div></div>
+    <div class="inc-badges"><div class="badge b-p3">1</div></div>
+    <div class="inc-badges"><div class="badge b-p4">1</div></div>
+    <div class="inc-total">Total: 3</div>
+  </div>
+  <div class="inc-row">
+    <div class="inc-label">RGS Downtime<br><span>(Backend transaction server)</span></div>
+    <div class="inc-badges"></div>
+    <div class="inc-badges"><div class="badge b-p2">1</div></div>
+    <div class="inc-badges"></div>
+    <div class="inc-badges"><div class="badge b-p4">1</div></div>
+    <div class="inc-total">Total: 2</div>
+  </div>
+</div>
+
+<div class="inc-legend">
+  <span><span class="dot" style="background:#c1121f;"></span>P1 (CRITICAL)</span>
+  <span><span class="dot" style="background:#ea580c;"></span>P2 (MAJOR)</span>
+  <span><span class="dot" style="background:#d97706;"></span>P3 (MINOR)</span>
+  <span><span class="dot" style="background:#949494;"></span>P4 (INFO)</span>
+</div>
+
+<p>Fourteen platform incidents were logged during the 29 June - 5 July reporting window. <strong>No Critical (P1) incidents occurred</strong> - an improvement on Week 14, which included a Critical power blip on <span class="port">Port Roulette</span>. The most significant event this week was a P2 Major on 1 July (ID 690 - the <span class="city">City Roulette</span> wheel repeatedly failed to register valid spin results, generating a run of "did not register" events that required manual intervention). This is a mechanical reliability concern and has been escalated to the Recommended Actions.</p>
+
+<p>Broadcast / Screen Downtime was again the dominant category at 9 of 14 incidents (64%), consistent with the technical complexity of maintaining live motion-capture and Unreal Engine rendering infrastructure across two simultaneous studio volumes. The two Major broadcast incidents were: no dealer visible on City (29 June, ID 686) and an audio dropout affecting both volumes for approximately 11 minutes during troubleshooting activity (3 July, ID 696).</p>
+
+<p>Friday 3 July was the heaviest single day with five incidents logged, several of which appear connected: a Motive PC freeze (ID 695) led to troubleshooting during which the audio mixer power was interrupted (ID 696). A structured review of that sequence may identify whether the audio loss was preventable. Two incidents affected backend transaction processing (RGS Downtime): a game stuck in "game end" phase on both volumes (29 June, Major, ID 685) resolved via websocket reconnect, and a network delay affecting RGS and wheel synchronisation (3 July, Informational, ID 697). No confirmed revenue impact was identified from either.</p>
+
+<!-- ══════════ 12. RECOMMENDED ACTIONS ══════════ -->
+<h2>12. Recommended Actions Summary</h2>
+
+<p>The following log outlines recommendations to be reviewed, prioritised, and formally assigned with due dates during the weekly SLT agenda alignment session.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:60%;">Action Item Description</th><th>Assigned Owner</th><th>Formal Due Date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Investigate the <span class="city">City Roulette</span> wheel registration failures (ID 690):</strong> The wheel repeatedly failed to capture valid spin results on 1 July, meaning rounds could not settle normally without manual intervention. Confirm how many rounds were affected, whether any players need to be contacted or compensated, and whether a hardware inspection or maintenance schedule is needed to prevent recurrence.</td>
+      <td>SLT to Assign</td>
+      <td>Next SLT Alignment</td>
+    </tr>
+    <tr>
+      <td><strong>Review the Friday 3 July incident cluster (IDs 694-698):</strong> Five incidents occurred within hours of each other, including a network dropout, a Motive PC failure, and an audio dropout that appears to have been caused during troubleshooting of the PC issue. Map the timeline and determine whether a troubleshooting protocol change could prevent one incident cascading into another.</td>
+      <td>SLT to Assign</td>
+      <td>Next SLT Alignment</td>
+    </tr>
+    <tr>
+      <td><strong>Confirm Cryptorino and Betpanda outcomes with the commercial team:</strong> Both HUB B2B (EU) sub-partners ran large wagered volumes at a loss this week (Cryptorino -$2,286 on $34.7K; Betpanda -$622 on $42.5K). Confirm whether these results fall within normal variance at their scale, and note that Betpanda's swing from +$10,270 last week to -$622 this week continues its episodic pattern flagged in Week 14.</td>
+      <td>SLT to Assign</td>
+      <td>Next SLT Alignment</td>
+    </tr>
+    <tr>
+      <td><strong>Investigate the <span class="city">City Roulette</span> conversion gap:</strong> City's conversion rate of 59.5% sits 20.5 percentage points below Port's 80.0% - meaning around 4 in 10 players who open <span class="city">City Roulette</span> leave without placing a bet. Understanding whether this is a product, interface, or audience-mix issue could directly lift City's revenue contribution.</td>
+      <td>SLT to Assign</td>
+      <td>Next SLT Alignment</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="footer">CONFIDENTIAL - BOARD AND SLT DISTRIBUTION ONLY &nbsp;|&nbsp; GENERATED 6 JULY 2026</div>
+
+</div><!-- /page -->
+
+<script>
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#777';
+
+// ── DAILY GGR BAR (green bars, red negative) ──
+const dailyVals = [813, 3081, 3608, 2449, 4676, 8173, 2770];
+new Chart(document.getElementById('dailyGGRChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Mon 29', 'Tue 30', 'Wed 1', 'Thu 2', 'Fri 3', 'Sat 4', 'Sun 5'],
+    datasets: [{
+      data: dailyVals,
+      backgroundColor: dailyVals.map(v => v >= 0 ? '#2d6a4f' : '#c1121f'),
+      barPercentage: 0.65,
+      categoryPercentage: 0.8
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '$' + c.parsed.y.toLocaleString() } } },
+    scales: {
+      y: { grid: { color: '#f0f0f0' }, ticks: { callback: v => '$' + v.toLocaleString(), font: { size: 10 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// ── HOURLY LINE (Port burgundy, City light blue, dot markers) ──
+const portW = [3590,1890,1895,1662,2652,993,1925,2439,1174,1409,1586,3491,3576,4614,6465,7898,2437,1201,1480,4190,4577,6039,3482,5864];
+const cityW = [1518,423,1289,1063,1417,1696,915,843,998,803,127,541,504,489,1329,958,529,873,605,1053,421,705,1106,824];
+new Chart(document.getElementById('hourlyChart'), {
+  type: 'line',
+  data: {
+    labels: Array.from({length:24}, (_,i) => i+':00'),
+    datasets: [
+      { label: 'Port Roulette', data: portW, borderColor: '#800020', pointBackgroundColor: '#800020', pointRadius: 3, tension: 0.35, fill: false, borderWidth: 2 },
+      { label: 'City Roulette', data: cityW, borderColor: '#6495ED', pointBackgroundColor: '#6495ED', pointRadius: 3, tension: 0.35, fill: false, borderWidth: 2 }
+    ]
+  },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.dataset.label + ': $' + c.parsed.y.toLocaleString() } } },
+    scales: {
+      y: { grid: { color: '#f0f0f0' }, ticks: { callback: v => '$' + v.toLocaleString(), font: { size: 10 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 45 } }
+    }
+  }
+});
+
+// ── GGR BY GAME BY DAY (stacked: City blue, Port maroon) ──
+const cityD = [85, 1323, 556, 3129, -1429, 5302, 1744];
+const portD = [728, 1759, 3053, -680, 6106, 2871, 1026];
+new Chart(document.getElementById('gameByDayChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Mon 29', 'Tue 30', 'Wed 1', 'Thu 2', 'Fri 3', 'Sat 4', 'Sun 5'],
+    datasets: [
+      { label: 'City Roulette', data: cityD, backgroundColor: '#2563eb', barPercentage: 0.65, categoryPercentage: 0.8 },
+      { label: 'Port Roulette', data: portD, backgroundColor: '#800020', barPercentage: 0.65, categoryPercentage: 0.8 }
+    ]
+  },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.dataset.label + ': $' + c.parsed.y.toLocaleString() } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { stacked: true, grid: { color: '#f0f0f0' }, ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K', font: { size: 10 } } }
+    }
+  }
+});
+
+// ── WEEKLY GGR TREND W1-W15 (green positive, red negative - matches daily GGR chart) ──
+const rollVals = [84800, 73500, 79200, 109400, 84700, 73400, 86200, 11800, 22400, 185900, 25500, 7000, -2900, 34857, 25571];
+new Chart(document.getElementById('rollingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12', 'W13', 'W14', 'W15'],
+    datasets: [{
+      data: rollVals,
+      backgroundColor: rollVals.map(v => v >= 0 ? '#2d6a4f' : '#c1121f'),
+      barPercentage: 0.65,
+      categoryPercentage: 0.8
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '$' + c.parsed.y.toLocaleString() } } },
+    scales: {
+      y: { grid: { color: '#f0f0f0' }, ticks: { callback: v => '$' + v.toLocaleString(), font: { size: 10 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
